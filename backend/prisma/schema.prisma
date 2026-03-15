@@ -1,0 +1,63 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  name String
+  email String @unique
+  password String
+  role Role @default(SEEKER)
+  createdAt DateTime @default(now())
+
+  jobs Job[]
+  applications Application[]
+  
+}
+
+model Job {
+  id Int @id @default(autoincrement())
+  title String
+  company String
+  location String
+  salary String
+  description String
+  createdAt DateTime @default(now())
+  postedBy User @relation(fields: [postedById],references: [id])
+  postedById Int
+
+  applications Application[]
+}
+
+model Application {
+  id Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  status ApplicationStatus @default(PENDING)
+
+  job Job @relation(fields: [jobId],references: [id])
+  jobId Int
+
+  applicant User @relation(fields: [applicantId],references: [id])
+  applicantId Int
+}
+
+enum Role {
+  RECRUITER
+  SEEKER
+}
+
+enum ApplicationStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
