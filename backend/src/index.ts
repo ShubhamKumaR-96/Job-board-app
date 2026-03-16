@@ -2,6 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import 'dotenv/config'
 import authRoutes from './routes/auth.route'
+import jobRoutes from './routes/job.routes'
 
 
 const app = express()
@@ -11,6 +12,7 @@ app.use(cors())
 app.use(express.json())
 
 app.use('/api/auth',authRoutes)
+app.use('/api/jobs',jobRoutes)
 
 app.get('/', (req, res) => {
   res.json({ message: 'Job Board API is running!' })
